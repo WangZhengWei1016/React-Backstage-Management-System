@@ -26,22 +26,34 @@ class Login extends Component {
                 <div className="login-content">
                     <h1>User Login</h1>
                     <Form onSubmit={this.handleSubmit} className="login-form">
+                        {/* 用户名 */}
                         <Form.Item>
                             {
                                 getFieldDecorator('username', {
-                                    rules: [{}]
+                                    rules: [
+                                        {required: true, whitespace: true, message: '用户名是必须的'},
+                                        {min: 4, message: '用户名最少为4位'},
+                                        {max: 12, message: '用户名最多为12位'},
+                                        {pattern: /^[A-Za-z0-9]+$/, message: '用户名只能是字母、数字和下划线或其组合'}
+                                    ]
                                 })(
                                     <Input
-                                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} 
                                     placeholder="Username"
                                     />
                                 )
                             }
                         </Form.Item>
+                        {/* 密码 */}
                         <Form.Item>
                             {
                                 getFieldDecorator('password', {
-                                    rules: [{}]
+                                    rules: [
+                                        {required: true, whitespace: true, message: '密码是必须的'},
+                                        {min: 4, message: '密码最少为4位'},
+                                        {max: 12, message: '密码最多为12位'},
+                                        {pattern: /^[A-Za-z0-9]+$/, message: '密码只能是字母、数字和下划线或其组合'}
+                                    ]
                                 })(
                                     <Input
                                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password"
