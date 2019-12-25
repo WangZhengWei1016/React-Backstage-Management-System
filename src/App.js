@@ -10,8 +10,8 @@ export default class App extends Component {
         return (
             <HashRouter>
                 <Switch>
-                    <Route path='/admin' component={Admin} />
-                    <Route path='/' component={Login} />
+                    <Route path='/login' component={Login} />
+                    <Route path='/' component={Admin} />
                 </Switch>
             </HashRouter>
         )

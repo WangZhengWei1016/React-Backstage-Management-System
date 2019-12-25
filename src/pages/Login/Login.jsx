@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button } from 'antd';
+import {Redirect} from 'react-router-dom'
+import { Form, Icon, Input, Button, message } from 'antd';
 
 import logo from './images/logo.png'
 import './Login.less'
+import {reqLogin} from '../../api'
+import localStorageUtils from '../../utils/localStorageUtils'
+import memoryUtils from '../../utils/memoryUtils'
 
 class Login extends Component {
 
@@ -13,17 +17,35 @@ class Login extends Component {
         // const {username, password} = getFieldsValue()
         // console.log(username, password);
         
-        this.props.form.validateFields((err, {username, password}) => {
+        // 统一验证
+        this.props.form.validateFields(async (err, {username, password}) => {
             if(!err) {
-                alert(`验证成功，username=${username} password=${password}`)
+                const result = await reqLogin(username, password)
+                if (result.status === 0) {
+                    
+                    // 将用户的信息保存到本地localStorage中
+                    const user = result.data
+                    // localStorage.setItem('user_key', JSON.stringify(user))
+                    localStorageUtils.saveUser(user)
+                    // 将用户的信息保存到内存中
+                    memoryUtils.user = user
+
+                    
+                    // 登陆成功，跳转到管理界面
+                    message.success('登录成功')
+                    this.props.history.replace('/')
+                    
+                } else {
+                    message.error(result.msg)
+                }
             }else {
-                
+                message.error('请正确输入用户名和密码')
             }
         })
 
     }
 
-    // 对密码进行自定义验证
+    // 对密码进行 自定义验证
     validatorPwd = (rule, value, callback) => {
         value = value.trim()
         if(!value) {
@@ -41,6 +63,14 @@ class Login extends Component {
 
     render() {
         const {getFieldDecorator} = this.props.form
+        
+        // 读取localStorage中保存的user_key，如果存在，则直接跳转到管理界面
+        // const user = JSON.parse(localStorage.getItem('user_key') || '{}')
+        const user = memoryUtils.user
+        if (user._id) {
+            return <Redirect to="/"/>
+        }
+
         return (
             <div className="login">
                 <div className="login-header">
