@@ -1,3 +1,6 @@
+/* 
+    折线图
+*/
 import React, { Component } from 'react'
 
 export default class Line extends Component {
