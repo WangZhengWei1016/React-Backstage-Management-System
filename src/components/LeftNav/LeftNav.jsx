@@ -13,6 +13,10 @@ const { SubMenu } = Menu
 
 class LeftNav extends Component {
 
+    UNSAFE_componentWillMount () {
+        this.menuNodes = this.getMenuNodes2(menuList)
+    }
+
     /* 
         根据menuList生成对应的<Menu.Item />或<SubMenu />节点
         reduce + 函数递归
@@ -102,9 +106,7 @@ class LeftNav extends Component {
 
 
     render() {
-
-        const menuNodes = this.getMenuNodes2(menuList)
-
+        
         const selectedKey = this.props.location.pathname
         // console.log(selectedKey)
         // console.log(this.openKeys)
@@ -126,74 +128,8 @@ class LeftNav extends Component {
                 >
                     {
                         // this.getMenuNodes(menuList)
-                        menuNodes
+                        this.menuNodes
                     }
-                    {/* <Menu.Item key='/home'>
-                        <Link to='/home'>
-                            <Icon type='home'></Icon>
-                            <span>首页</span>
-                        </Link>
-                    </Menu.Item>
-                    <SubMenu key='products'
-                        title={
-                            <span>
-                                <Icon type='appstore'></Icon>
-                                <span>商品</span>
-                            </span>
-                        }
-                    >
-                        <Menu.Item key='/products/category'>
-                            <Link to='/products/category'>
-                                <Icon type='unordered-list'></Icon>
-                                <span>品类管理</span>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key='/products/product'>
-                            <Link to='/products/product'>
-                                <Icon type="tool" />
-                                <span>商品管理</span>
-                            </Link>
-                        </Menu.Item>
-                    </SubMenu>
-                    <Menu.Item key='/user'>
-                        <Link to='/user'>
-                            <Icon type='user'></Icon>
-                            <span>用户管理</span>
-                        </Link>
-                    </Menu.Item>
-                    <Menu.Item key='/role'>
-                        <Link to='/role'>
-                            <Icon type='safety'></Icon>
-                            <span>角色管理</span>
-                        </Link>
-                    </Menu.Item>
-                    <SubMenu key='/charts'
-                        title={
-                            <span>
-                                <Icon type='area-chart'></Icon>
-                                <span>图形图标</span>
-                            </span>
-                        }
-                    >
-                        <Menu.Item key='/charts/bar'>
-                            <Link to='/charts/bar'>
-                                <Icon type='bar-chart'></Icon>
-                                <span>柱形图</span>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key='/charts/line'>
-                            <Link to='/charts/line'>
-                                <Icon type='line-chart'></Icon>
-                                <span>折线图</span>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key='/charts/pie'>
-                            <Link to='/charts/pie'>
-                                <Icon type='pie-chart'></Icon>
-                                <span>饼图</span>
-                            </Link>
-                        </Menu.Item>
-                    </SubMenu> */}
                 </Menu>
             </div>
         )
