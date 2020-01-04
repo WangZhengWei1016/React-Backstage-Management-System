@@ -13,7 +13,7 @@ axios.interceptors.request.use((config) => {
     return config
 })
 
-// 添加相应拦截器
+// 添加响应拦截器
 axios.interceptors.response.use((response) => {
     return response.data
 }, (error) => {

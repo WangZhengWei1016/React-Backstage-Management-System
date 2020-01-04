@@ -7,8 +7,9 @@ import ajax from './ajax'
 import jsonp from 'jsonp'
 import { message } from 'antd'
 
-// 请求登录
 const BASE = ''
+
+// 请求登录
 export const reqLogin = (username, password) => ajax.post(BASE + '/login', {username, password})
 
 // 发送jsonp请求得到天气信息
@@ -30,3 +31,17 @@ export const reqWeather = (city) => {
         })
     })
 }
+
+// 发送请求获取分类列表
+export const reqCategorys = () => ajax(BASE + '/manage/category/list')
+
+// 添加分类
+export const reqAddCategory = (categoryName) => ajax.post(BASE + '/manage/category/add', {
+    categoryName
+})
+
+// 修改分类
+export const reqUpdateCategory = ({categoryId, categoryName}) => ajax.post(BASE + '/manage/category/update', {
+    categoryId,
+    categoryName
+})
