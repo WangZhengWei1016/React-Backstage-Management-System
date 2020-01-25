@@ -7,13 +7,14 @@ import { Card, Icon, Button, Table, message, Modal } from 'antd'
 import LinkButton from '../../components/LinkButton/LinkButton'
 import { reqCategorys, reqAddCategory, reqUpdateCategory } from '../../api'
 import AddUpdateForm from './AddUpdateForm'
+import { PAGE_SIZE } from '../../utils/constants'
 
 export default class Category extends Component {
 
     state = {
         categorys: [],
         loading: false,
-        showStatus: 0 // 0表示隐藏，1表示显示添加，2表示显示修改
+        showStatus: 0 // 对话框的显示状态 0表示隐藏，1表示显示添加，2表示显示修改
     }
 
     /* 
@@ -49,7 +50,7 @@ export default class Category extends Component {
         this.setState({loading: false})
         if (result.status === 0) {
             // 取出分类列表
-            let categorys = result.data
+            const categorys = result.data
             // 更新状态categorys数据
             this.setState({
                 categorys
@@ -96,6 +97,8 @@ export default class Category extends Component {
                 } else {
                     message.error(action + '分类失败')
                 }
+            } else {
+                message.error('添加失败，请按要求填写')
             }
         })
     }
@@ -146,7 +149,7 @@ export default class Category extends Component {
                     columns={this.columns}
                     dataSource={categorys}
                     loading={loading}
-                    pagination={{defaultPageSize: 8, showQuickJumper: true}}
+                    pagination={{defaultPageSize: PAGE_SIZE, showQuickJumper: true}}
                 />
                 <Modal
                     title={showStatus === 1 ? '添加分类' : '修改分类'}

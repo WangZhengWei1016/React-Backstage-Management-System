@@ -8,67 +8,86 @@ import { Menu, Icon } from 'antd'
 import './LeftNav.less'
 import logo from '../../assets/images/logo.png'
 import menuList from '../../config/menuConfig'
+import memoryUtils from '../../utils/memoryUtils'
 
 const { SubMenu } = Menu
 
 class LeftNav extends Component {
 
-    UNSAFE_componentWillMount () {
-        this.menuNodes = this.getMenuNodes2(menuList)
-    }
-
     /* 
         根据menuList生成对应的<Menu.Item />或<SubMenu />节点
         reduce + 函数递归
     */
-    getMenuNodes2 = (menuList) => {
+    getMenuNodes = (menuList) => {
 
         // 请求的路径
         const path = this.props.location.pathname
 
         return menuList.reduce((preList, item) => {
 
-            if (!item.children) {
-                preList.push(
-                    <Menu.Item key={item.key}>
-                        <Link to={item.key}>
-                            <Icon type={item.icon}></Icon>
-                            <span>{item.title}</span>
-                        </Link>
-                    </Menu.Item>
-                )
-            } else {
-
-                /* 
-                    判断当前item的key是否为需要的opneKeys
-                        查找当前item中所有的cItem的key，比较是否和当前访问的path匹配
-                 */
-                {
-                    const cItem = item.children.find(item => item.key === path)
-                    if (cItem) {
-                        this.openKeys = item.key
-                    }
-                }
-
-                preList.push(
-                    <SubMenu key={item.key}
-                        title={
-                            <span> 
+            // 判断当前用户是否有此条item对应的权限，如果有，将此条item的信息push到preList中展示
+            if (this.hasAuthority(item)) {
+                if (!item.children) {
+                    preList.push(
+                        <Menu.Item key={item.key}>
+                            <Link to={item.key}>
                                 <Icon type={item.icon}></Icon>
                                 <span>{item.title}</span>
-                            </span>
+                            </Link>
+                        </Menu.Item>
+                    )
+                } else {
+    
+                    /* 
+                        判断当前item的key是否为需要的opneKeys
+                            查找当前item中所有的cItem的key，比较是否和当前访问的path匹配
+                     */
+                    {
+                        const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
+                        if (cItem) {
+                            this.openKeys = item.key
                         }
-                    >
-                        {
-                            this.getMenuNodes2(item.children)
-                        }
-                    </SubMenu>
-                )
+                    }
+    
+                    preList.push(
+                        <SubMenu key={item.key}
+                            title={
+                                <span> 
+                                    <Icon type={item.icon}></Icon>
+                                    <span>{item.title}</span>
+                                </span>
+                            }
+                        >
+                            {
+                                this.getMenuNodes(item.children)
+                            }
+                        </SubMenu>
+                    )
+                }
             }
+
             return preList
         }, [])
     }
 
+    /* 
+        判断当前用户是否有此条item对应的权限
+    */
+    hasAuthority = (item) => {
+        
+        const { user } = memoryUtils
+        const { menus } = user.role
+        // 1.当前用户为admin
+        // 2.此条item为public公开展示
+        // 3.登录用户有此item的权限
+        if (user.username === 'admin' || item.public || menus.indexOf(item.key) !== -1) {
+            return true
+        } else if (item.children) { // 如果当前用户有此item的某个子节点的权限，当前item也应该显示
+            const cItem = item.children.find((cItem) => menus.indexOf(cItem.key) !== -1)
+            return !!cItem
+        }
+        return false
+    }
 
     /* 
         根据menuList生成对应的<Menu.Item />或<SubMenu />节点
@@ -104,12 +123,18 @@ class LeftNav extends Component {
         })
     } */
 
+    UNSAFE_componentWillMount () {
+        this.menuNodes = this.getMenuNodes(menuList)
+    }
 
     render() {
         
-        const selectedKey = this.props.location.pathname
-        // console.log(selectedKey)
-        // console.log(this.openKeys)
+        let selectedKey = this.props.location.pathname
+        // 处理 /product/detail 和 /product/addUpdate 左侧导航不选中的bug
+        if (selectedKey.indexOf('/product') === 0) {
+            selectedKey = '/product'
+        }
+        
         return (
             <div className='left-nav'>
                 <Link className='left-nav-link' to='/'>

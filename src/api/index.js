@@ -13,7 +13,7 @@ const BASE = ''
 export const reqLogin = (username, password) => ajax.post(BASE + '/login', {username, password})
 
 // 发送jsonp请求得到天气信息
-export const reqWeather = (city) => {
+export const reqWeather = city => {
 
     // 执行器函数：内部去执行异步任务
     // 成功了调用resolve(), 失败了不调用reject(), 而是直接提示错误
@@ -36,7 +36,7 @@ export const reqWeather = (city) => {
 export const reqCategorys = () => ajax(BASE + '/manage/category/list')
 
 // 添加分类
-export const reqAddCategory = (categoryName) => ajax.post(BASE + '/manage/category/add', {
+export const reqAddCategory = categoryName => ajax.post(BASE + '/manage/category/add', {
     categoryName
 })
 
@@ -45,3 +45,93 @@ export const reqUpdateCategory = ({categoryId, categoryName}) => ajax.post(BASE 
     categoryId,
     categoryName
 })
+
+// 获取商品分页列表
+export const reqProducts = (pageNum, pageSize) => ajax(BASE + '/manage/product/list', {
+    params: {
+        pageNum,
+        pageSize
+    }
+})
+
+// 根据Name/desc搜索产品分页列表
+export const reqSearchProducts = (pageNum, pageSize, searchType, searchKeyWords) => ajax(BASE + '/manage/product/search', {
+    params: {
+        pageNum,
+        pageSize,
+        [searchType]: searchKeyWords
+    }
+})
+
+// 对商品进行上架/下架处理
+export const reqUpdateStatus = (status, productId) => ajax(BASE + '/manage/product/updateStatus', {
+    method: 'post',
+    data: {
+        status,
+        productId
+
+    }
+})
+
+// 根据分类ID获取分类
+export const reqCategory = categoryId => ajax(BASE + '/manage/category/info', {
+    params: {
+        categoryId
+    }
+})
+
+/* 
+    根据商品ID获取商品
+*/
+
+export const reqProduct = productId => ajax(BASE + '/manage/product/info', {
+    params: {
+        productId
+    }
+})
+
+/* 
+    删除图片
+*/
+export const reqDeleteImg = name => ajax.post(BASE + '/manage/img/delete', {name})
+
+/* 
+    添加/更新商品
+*/
+export const reqAddOrUpdateProduct = product => ajax.post(
+    BASE + '/manage/product/' + (product._id ? 'update' : 'add'),
+    product
+)
+
+/* 
+    获取角色列表
+*/
+export const reqRoles = () => ajax(BASE + '/manage/role/list')
+
+/* 
+    添加角色
+*/
+export const reqAddRole = roleName => ajax.post(BASE + '/manage/role/add', {roleName})
+
+/* 
+    更新角色(给角色设置权限)
+*/
+export const reqUpdateRole = role => ajax.post(BASE + '/manage/role/update', role)
+
+/* 
+    获取所有用户列表
+*/
+export const reqUsers = () => ajax(BASE + '/manage/user/list')
+
+/* 
+    添加/更新用户
+*/
+export const reqAddOrUpdateUser = user => ajax.post(
+    BASE + '/manage/user/' + (user._id ? 'update' : 'add'),
+    user
+)
+
+/* 
+    删除用户
+*/
+export const reqDeleteUser = userId => ajax.post(BASE + '/manage/user/delete', {userId})

@@ -2,7 +2,8 @@ const menuList = [
     {
         title: '首页',
         key: '/home',
-        icon: 'home'
+        icon: 'home',
+        public: true // 公开展示
     },
     {
         title: '商品',
@@ -11,12 +12,12 @@ const menuList = [
         children: [
             {
                 title: '品类管理',
-                key: '/products/category',
+                key: '/category',
                 icon: 'unordered-list'
             },
             {
                 title: '商品管理',
-                key: '/products/product',
+                key: '/product',
                 icon: 'tool'
             }
         ]
@@ -33,7 +34,7 @@ const menuList = [
     },
     {
         title: '图形图标',
-        key: '/chart',
+        key: '/charts',
         icon: 'area-chart',
         children: [
             {

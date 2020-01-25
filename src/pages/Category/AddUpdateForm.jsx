@@ -33,7 +33,7 @@ class AddUpdateForm extends Component {
                                 {required: true, message: '商品类名必须输入'}
                             ]
                         })(
-                            <Input placeholder='请输入商品分类名'></Input>
+                            <Input placeholder='请输入商品分类名' />
                         )
                     }
                 </Form.Item>

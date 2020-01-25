@@ -33,7 +33,7 @@ class Header extends Component {
     }
 
     getWeather = async () => {
-        const {dayPictureUrl, weather, temperature} = await reqWeather('南京')
+        const {dayPictureUrl, weather, temperature} = await reqWeather('宿城区')
 
         // 更新状态
         this.setState({
@@ -69,12 +69,13 @@ class Header extends Component {
 
     getTitle = () => {
         let title = ''
+        const path = this.props.location.pathname
         menuList.forEach(item => {
             if (this.props.location.pathname === item.key) {
                 title = item.title
             }else if(item.children) {
                 item.children.forEach(cItem => {
-                    if (this.props.location.pathname === cItem.key) {
+                    if (path.indexOf(cItem.key) === 0) {
                         title = cItem.title
                     }
                 })

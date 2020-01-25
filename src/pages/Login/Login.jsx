@@ -54,7 +54,7 @@ class Login extends Component {
             callback('密码最少为4位')
         }else if(value.length > 12) {
             callback('密码最多为12位')
-        }else if(!/^[A-Za-z0-9]+$/.test(value)) {
+        }else if(!/^[A-Za-z0-9_]+$/.test(value)) {
             callback('密码只能是字母、数字和下划线或其组合')
         }else {
             callback()
@@ -88,7 +88,7 @@ class Login extends Component {
                                         {required: true, whitespace: true, message: '用户名是必须的'},
                                         {min: 4, message: '用户名最少为4位'},
                                         {max: 12, message: '用户名最多为12位'},
-                                        {pattern: /^[A-Za-z0-9]+$/, message: '用户名只能是字母、数字和下划线或其组合'}
+                                        {pattern: /^[A-Za-z0-9]+$/, message: '用户名只能是字母、数字或其组合'}
                                     ]
                                 })(
                                     <Input
