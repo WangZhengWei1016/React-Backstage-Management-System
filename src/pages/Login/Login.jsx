@@ -1,14 +1,19 @@
 import React, { Component } from 'react'
 import {Redirect} from 'react-router-dom'
-import { Form, Icon, Input, Button, message } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
+import { login } from '../../redux/actions'
 import logo from '../../assets/images/logo.png'
 import './Login.less'
-import {reqLogin} from '../../api'
-import localStorageUtils from '../../utils/localStorageUtils'
-import memoryUtils from '../../utils/memoryUtils'
 
 class Login extends Component {
+
+    static propTypes = {
+        login: PropTypes.func.isRequired,
+        user: PropTypes.object.isRequired
+    }
 
     handleSubmit = e => {
         e.preventDefault();
@@ -20,24 +25,7 @@ class Login extends Component {
         // 统一验证
         this.props.form.validateFields(async (err, {username, password}) => {
             if(!err) {
-                const result = await reqLogin(username, password)
-                if (result.status === 0) {
-                    
-                    // 将用户的信息保存到本地localStorage中
-                    const user = result.data
-                    // localStorage.setItem('user_key', JSON.stringify(user))
-                    localStorageUtils.saveUser(user)
-                    // 将用户的信息保存到内存中
-                    memoryUtils.user = user
-
-                    
-                    // 登陆成功，跳转到管理界面
-                    message.success('登录成功')
-                    this.props.history.replace('/')
-                    
-                } else {
-                    message.error(result.msg)
-                }
+                this.props.login(username, password)
             }else {
                 message.error('请正确输入用户名和密码')
             }
@@ -66,9 +54,9 @@ class Login extends Component {
         
         // 读取localStorage中保存的user_key，如果存在，则直接跳转到管理界面
         // const user = JSON.parse(localStorage.getItem('user_key') || '{}')
-        const user = memoryUtils.user
+        const user = this.props.user
         if (user._id) {
-            return <Redirect to="/"/>
+            return <Redirect to="/home"/>
         }
 
         return (
@@ -128,4 +116,7 @@ class Login extends Component {
 
 const WrapLoginForm = Form.create()(Login)
 
-export default WrapLoginForm
+export default connect(
+    state => ({user: state.user}),
+    {login}
+)(WrapLoginForm)

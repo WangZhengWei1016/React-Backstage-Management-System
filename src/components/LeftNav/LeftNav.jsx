@@ -4,15 +4,22 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { Menu, Icon } from 'antd'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import './LeftNav.less'
 import logo from '../../assets/images/logo.png'
 import menuList from '../../config/menuConfig'
-import memoryUtils from '../../utils/memoryUtils'
+import { setHeaderTitle } from '../../redux/actions'
 
 const { SubMenu } = Menu
 
 class LeftNav extends Component {
+
+    static propTypes = {
+        user: PropTypes.object.isRequired,
+        serHeaderTitle: PropTypes.func
+    }
 
     /* 
         根据menuList生成对应的<Menu.Item />或<SubMenu />节点
@@ -25,12 +32,16 @@ class LeftNav extends Component {
 
         return menuList.reduce((preList, item) => {
 
+            if (path === item.key || path.indexOf(item.key) === 0) {
+                this.props.setHeaderTitle(item.title)
+            }
+
             // 判断当前用户是否有此条item对应的权限，如果有，将此条item的信息push到preList中展示
             if (this.hasAuthority(item)) {
                 if (!item.children) {
                     preList.push(
                         <Menu.Item key={item.key}>
-                            <Link to={item.key}>
+                            <Link to={item.key} onClick={() => {this.props.setHeaderTitle(item.title)}}>
                                 <Icon type={item.icon}></Icon>
                                 <span>{item.title}</span>
                             </Link>
@@ -75,7 +86,7 @@ class LeftNav extends Component {
     */
     hasAuthority = (item) => {
         
-        const { user } = memoryUtils
+        const { user } = this.props
         const { menus } = user.role
         // 1.当前用户为admin
         // 2.此条item为public公开展示
@@ -166,4 +177,7 @@ class LeftNav extends Component {
     新组件向LeftNav传递三个参数，history / location / match
     从而使LeftNav可以使用路由的相关语法
 */
-export default withRouter(LeftNav)
+export default connect(
+    state => ({user: state.user}),
+    {setHeaderTitle}
+)(withRouter(LeftNav))

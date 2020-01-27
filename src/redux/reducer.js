@@ -3,6 +3,12 @@
 */
 import { combineReducers } from 'redux'
 
+import {
+    SET_HEADER_TITLE,
+    RECIVE_USER,
+    SHOW_ERROR,
+    LOGOUT
+} from './action-types'
 import localStorageUtils from '../utils/localStorageUtils'
 
 /* 
@@ -11,10 +17,8 @@ import localStorageUtils from '../utils/localStorageUtils'
 const initHeaderTitle = '首页'
 function headerTitle(state = initHeaderTitle, action) {
     switch (action.type) {
-        /* case value:
-            
-            break; */
-    
+        case SET_HEADER_TITLE:
+            return action.data
         default:
             return state
     }
@@ -26,10 +30,12 @@ function headerTitle(state = initHeaderTitle, action) {
 const initUser = localStorageUtils.getUser() // 读取local中保存的user作为初始值
 function user(state = initUser, action) {
     switch (action.type) {
-        /* case value:
-            
-            break; */
-    
+        case RECIVE_USER:
+            return action.user
+        case LOGOUT:
+            return {}
+        case SHOW_ERROR:
+            return {...state, errorMsg: action.errorMsg}
         default:
             return state
     }

@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Modal } from "antd";
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
+import { logout } from '../../redux/actions'
 import './Header.less'
-import memoryUtils from "../../utils/memoryUtils";
-import localStorageUtils from "../../utils/localStorageUtils";
-import menuList from "../../config/menuConfig";
+import menuList from "../../config/menuConfig"
 import formateDate from '../../utils/dateFormate'
 import { reqWeather } from '../../api'
 import LinkButton from '../LinkButton/LinkButton'
@@ -13,6 +14,12 @@ import LinkButton from '../LinkButton/LinkButton'
 const { confirm } = Modal
 
 class Header extends Component {
+
+    static propTypes = {
+        user: PropTypes.object.isRequired,
+        headerTitle: PropTypes.string.isRequired,
+        logout: PropTypes.func
+    }
 
     state = {
         currentTime: formateDate(Date.now()),
@@ -22,7 +29,7 @@ class Header extends Component {
     }
 
     componentDidMount () {
-        setInterval(() => {
+        this.timerId = setInterval(() => {
             this.setState({
                 currentTime: formateDate(Date.now())
             })
@@ -43,6 +50,11 @@ class Header extends Component {
         })
     }
 
+    componentWillUnmount() {
+        // 清除定时器
+        clearInterval(this.timerId)
+    }
+
     /* 
         退出登录
     */
@@ -53,9 +65,9 @@ class Header extends Component {
             onOk: () => {
                 // 确认后，删除存储的用户信息
                 // 1.删除local中的信息
-                localStorageUtils.removeUser()
+                // localStorageUtils.removeUser()
                 // 2.删除内存中的信息
-                memoryUtils.user = {}
+                this.props.logout()
 
                 this.props.history.replace('/login')
             },
@@ -86,9 +98,10 @@ class Header extends Component {
 
     render() {
 
-        const { user } = memoryUtils
+        const { user } = this.props
 
-        let title = this.getTitle()
+        // let title = this.getTitle()
+        let title = this.props.headerTitle
 
         return (
             <div className='header'>
@@ -109,4 +122,11 @@ class Header extends Component {
     }
 }
 
-export default withRouter(Header)
+
+export default connect(
+    state => ({
+        headerTitle: state.headerTitle,
+        user: state.user
+    }),
+    {logout}
+)(withRouter(Header))

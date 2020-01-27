@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Redirect, Switch, Route } from 'react-router-dom'
-import { Layout } from "antd";
+import { Layout } from "antd"
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import memoryUtils from '../../utils/memoryUtils'
 import LeftNav from '../../components/LeftNav/LeftNav'
 import Header from '../../components/Header/Header'
 import Home from '../Home/Home'
@@ -16,12 +17,17 @@ import Pie from '../Charts/Pie'
 
 const { Sider, Content, Footer } = Layout
 
-export default class Admin extends Component {
+class Admin extends Component {
+
+    static propTypes = {
+        user: PropTypes.object.isRequired
+    }
+
     render() {
         
         // 读取localStorage中保存的user_key，如果不存在，则直接跳转到登录界面
         // const user = JSON.parse(localStorage.getItem('user_key') || '{}')
-        const user = memoryUtils.user
+        const user = this.props.user
         if (!user._id) {
             return <Redirect to="/login" />
         }
@@ -52,3 +58,8 @@ export default class Admin extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({user: state.user}),
+    {}
+)(Admin)
