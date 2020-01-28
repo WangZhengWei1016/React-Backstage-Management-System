@@ -1,8 +1,8 @@
 /* 
     角色管理
 */
-import React, { Component } from 'react'
-import {  Card, Button, Icon, Table, Modal, message } from 'antd'
+import React, { PureComponent } from 'react'
+import { Card, Button, Icon, Table, Modal, message } from 'antd'
 
 import LinkButton from '../../components/LinkButton/LinkButton'
 import { PAGE_SIZE } from '../../utils/constants'
@@ -12,7 +12,7 @@ import AddForm from './AddForm'
 import SetAuthority from './SetAuthority'
 import memoryUtils from '../../utils/memoryUtils'
 
-export default class Role extends Component {
+export default class Role extends PureComponent {
 
     state = {
         roles: [],
@@ -93,9 +93,13 @@ export default class Role extends Component {
 
                 if (result.status === 0) {
                     message.success('角色添加成功')
-                    this.getRoles()
+                    // this.getRoles()
+                    const role = result.data
+                    this.setState(state => ({
+                        roles: [...this.state.roles, role],
+                        addRoleVisible: false
+                    }))
 
-                    this.setState({addRoleVisible: false})
                     this.form.resetFields()
                 } else {
                     message.error(result.msg)
@@ -147,7 +151,7 @@ export default class Role extends Component {
     }
 
     render() {
-
+        // console.log('Role render()')
         const extra = (
             <Button
                 type='primary'

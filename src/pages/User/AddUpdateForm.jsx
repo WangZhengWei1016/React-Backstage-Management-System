@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { Form, Input, Select } from 'antd'
 import PropTypes from 'prop-types'
 
@@ -22,6 +22,8 @@ class AddUpdateForm extends Component {
     }
 
     render() {
+
+        // console.log('AddUpdateForm render()')
 
         const { getFieldDecorator } = this.props.form
 

@@ -150,6 +150,8 @@ export default class User extends Component {
 
     render() {
 
+        // console.log('User render()')
+
         const { users, roles, isLoading, visible } = this.state
         const user = this.user || {}
 

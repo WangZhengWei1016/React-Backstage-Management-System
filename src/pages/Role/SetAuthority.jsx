@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { Tree, Form, Input } from 'antd'
 
@@ -10,7 +10,7 @@ const formItemLayout = {
     wrapperCol: {span: 20}
 }
 
-export default class SetAuthority extends Component {
+export default class SetAuthority extends PureComponent {
 
     static propTypes = {
         role: PropTypes.object
@@ -79,7 +79,8 @@ export default class SetAuthority extends Component {
     }
     
     render() {
-
+        // console.log('SetAuthority render()')
+        
         const { role } = this.props
 
         const { checkedKeys } = this.state
@@ -98,7 +99,7 @@ export default class SetAuthority extends Component {
                     checkedKeys={checkedKeys}
                     onCheck={this.handleCheck}
                 >
-                    <TreeNode title="平台权限" key="AllAuthority">
+                    <TreeNode title="平台权限" key="all">
                         {
                             this.treeNodes
                         }

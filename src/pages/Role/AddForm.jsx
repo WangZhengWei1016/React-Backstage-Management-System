@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, { PureComponent } from 'react'
 import { Form, Input } from 'antd'
 import PropTypes from 'prop-types'
 
-class AddForm extends Component {
+class AddForm extends PureComponent {
     static propTypes = {
         setForm: PropTypes.func.isRequired
     }
@@ -10,9 +10,10 @@ class AddForm extends Component {
     UNSAFE_componentWillMount() {
         this.props.setForm(this.props.form)
     }
-
+    
     render() {
-
+        
+        // console.log('AddForm render()')
         const { getFieldDecorator } = this.props.form
 
         return (
